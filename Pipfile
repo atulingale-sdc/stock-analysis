@@ -1,0 +1,19 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+openai = "*"
+requests = "*"
+polygon-api-client = "*"
+typer = "*"
+inject = "*"
+pydantic = "~=2.1.1"
+pydantic_settings = "~=2.0.2"
+plotext = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.11"
