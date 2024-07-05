@@ -85,4 +85,5 @@ class StockAnalysisService:
         await self.visualizer.plot_bar_chart(
             data=resp, period=f"{start_date} to {end_date}", group_by=group_by, start=start_date, end=end_date
         )
+        print(summery)
         return summery
