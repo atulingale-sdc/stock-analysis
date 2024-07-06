@@ -147,8 +147,5 @@ cython_debug/
 *.db-*
 .vscode/
 
-# Docker Data Volums
-/gc-data/gc-backend-postgres/
-/gc-data/redis/
-
-postgres
+#
+images/
