@@ -52,11 +52,15 @@ class StockAnalysisService:
         if diff.days > 365:
             group_by = "year"
         elif diff.days > 180:
-            group_by = "quarter"
+            # Quarterly is not supported currently in graph generation
+            # group_by = "quarter"
+            group_by = "month"
         elif diff.days > 60:
             group_by = "month"
         elif diff.days > 15:
-            group_by = "week"
+            # Weekly is not supported currently in graph generation
+            # group_by = "week"
+            group_by = "day"
         elif diff.days > 7:
             group_by = "day"
         elif diff.seconds > (120*60):
