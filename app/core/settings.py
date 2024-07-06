@@ -14,6 +14,21 @@ class CoreSettings(BaseSettings):
     run_mode: str = "CLI"
     log_level: str = "DEBUG"
 
+    app_port: int = 8080
+    app_host: str = "127.0.0.1"
+    app_base_url: str | None = None
+    base_url: str | None = None
+    root_path: str = ""
+    openapi_url: str = "/openapi.json"
+    algorithm: str = "HS256"
+    access_token_expire_minutes: int = 30
+    token_url: str = "token"
+    shared_secret_key: str | None = None
+    app_secret_key: str | None = None
+
+    force_https: bool = False
+    cors_origins: set[str] = {"http://127.0.0.1:8888", "http://127.0.0.1:3000"}
+
     openai_api_key: str | None = None
     polygon_api_key: str | None = None
 
@@ -33,3 +48,8 @@ class CoreSettings(BaseSettings):
     def is_prod(self) -> bool:
         """Returns tru if the current environment is PROD"""
         return self.app_env == "PROD"
+
+    @property
+    def can_reload(self) -> bool:
+        """Determines if service can be reloaded on file change."""
+        return self.is_local or self.is_dev

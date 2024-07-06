@@ -10,6 +10,7 @@ from app.adators.data_api.base import DataAPIAdaptor
 from app.adators.data_api.polygon_io import PolygonIoAdapter
 from app.adators.data_visualizer.base import Visualizer
 from app.adators.data_visualizer.terminal import TerminalVisualizer
+from app.adators.data_visualizer.image import ImageVisualizer
 
 logger = logging.getLogger(__name__)
 
@@ -36,6 +37,7 @@ def get_data_visualiser() -> Visualizer:
     settings = get_settings()
     if settings.run_mode == 'CLI':
         return TerminalVisualizer(conf=settings)
+    return ImageVisualizer(conf=settings)
 
 
 def configure_dependency(binder: inject.Binder) -> None:

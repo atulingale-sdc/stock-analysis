@@ -5,6 +5,7 @@ from datetime import datetime
 from app.adators.llm.base import LLMAdaptor
 from app.adators.data_api.base import DataAPIAdaptor
 from app.adators.data_visualizer.base import Visualizer
+from app.settings import Settings
 
 logger = logging.getLogger(__name__)
 
@@ -12,23 +13,21 @@ logger = logging.getLogger(__name__)
 class StockAnalysisService:
     """Provides high level interface for user interaction with application."""
 
-    @inject.autoparams("llm_model", "data_api", "visual")
-    def __init__(self, llm_model: LLMAdaptor, data_api: DataAPIAdaptor, visual: Visualizer):
+    @inject.autoparams("conf", "llm_model", "data_api", "visual")
+    def __init__(self, conf: Settings, llm_model: LLMAdaptor, data_api: DataAPIAdaptor, visual: Visualizer):
         """
         Initialize Service object with all required dependencies
         """
         self.llm = llm_model
         self.data_api = data_api
         self.visualizer = visual
+        self.conf = conf
 
         self.symbol_map = {
             'APPLE': 'AAPL',
         }
 
-    def find_best_group_by(self):
-        pass
-
-    async def analyse_user_query(self, user_inp: str) -> str | None:
+    async def analyse_user_query(self, user_inp: str) -> tuple[str, str] | None:
         """
         Perform action on the user query and generate the requested output.
         :param user_inp: User query to work on.
@@ -40,7 +39,7 @@ class StockAnalysisService:
         org = data.get("Organization") or ""
         symbol = self.symbol_map.get(org.upper())
         if not symbol:
-            raise RuntimeError(f"Unable to find symbol for {symbol} to get stock information.")
+            raise RuntimeError(f"Unable to find symbol for {org} to get stock information. Only 'Apple' is supported.")
 
         period = data.get("Period") | {}
         if not period:
@@ -82,8 +81,9 @@ class StockAnalysisService:
         logger.debug(f"Stock data: {data}")
         summery = await self.llm.create_summery(data="\n".join(data), period=f"{start_date} to {end_date}")
         logger.info(f"Summery: {summery}")
-        await self.visualizer.plot_bar_chart(
+
+        # Plot the Graph with given data
+        image = await self.visualizer.plot_bar_chart(
             data=resp, period=f"{start_date} to {end_date}", group_by=group_by, start=start_date, end=end_date
         )
-        print(summery)
-        return summery
+        return summery, f"{self.conf.app_base_url}/{image}"
