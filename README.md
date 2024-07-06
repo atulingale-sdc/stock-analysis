@@ -5,6 +5,8 @@ Query the polygon with extracted tokens and visualise the response with graph. E
 ## Libraries used
 - OpenAI
 - plotext
+- matplotlib
+- fastapi
 
 ## Platform Pre-requisites
 
