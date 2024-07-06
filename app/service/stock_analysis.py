@@ -49,7 +49,7 @@ class StockAnalysisService:
         start_date = datetime.strptime(period.get("start_date"), "%Y-%m-%d")
         end_date = datetime.strptime(period.get("end_date"), "%Y-%m-%d")
         diff = (end_date - start_date)
-        if diff.days > 365:
+        if diff.days > 730:
             group_by = "year"
         elif diff.days > 180:
             # Quarterly is not supported currently in graph generation
