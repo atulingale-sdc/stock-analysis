@@ -12,6 +12,8 @@ inject = "*"
 pydantic = "~=2.1.1"
 pydantic_settings = "~=2.0.2"
 plotext = "*"
+langchain = "*"
+python-dateutil = "*"
 
 [dev-packages]
 

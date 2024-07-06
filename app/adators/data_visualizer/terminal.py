@@ -17,14 +17,20 @@ class TerminalVisualizer(Visualizer):
             self,
             data: Any, period: str, group_by: str, start: datetime | date, end: datetime | date
     ):
-        dates = []
+        """
+        Prepare chart data and plots the chart.
+
+        :param data:
+        :param period:
+        :param group_by:
+        :param start:
+        :param end:
+        :return:
+        """
+        dates = self.get_labels_for_period(start=start, end=end, group_by=group_by)
         high, low, open_, close_, volume = [], [], [], [], []
 
-        count = 1
         for item in data:
-            dates.append(count)
-            count += 1
-
             high.append(item.high)
             low.append(item.open)
             open_.append(item.open)
