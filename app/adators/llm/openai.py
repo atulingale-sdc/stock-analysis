@@ -27,9 +27,9 @@ class OpenAIAdaptor(LLMAdaptor):
     async def extract_tokens(self, text, model: str | None = None) -> None | dict:
         # Define the prompt
         prompt = (
-            f"Extract named entities from the following text:"
+            f"Extract named entities with corresponding stock symbol from the following text:"
             f"\n\n{text}\n\n Provide output in JSON format with categories: "
-            f"Organization, Period. "
+            f"Organization, Symbol, Period. "
             f"Convert the period relative time expression to an actual date range. Consider current date '{datetime.now().date()}'"
             f"Provide the output in format: 'start_date' and 'end_date' where dates are in YYYY-MM-DD format, "
             # f"along with extracted Organization, Period."

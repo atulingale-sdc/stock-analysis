@@ -37,9 +37,12 @@ class StockAnalysisService:
         data = await self.llm.extract_tokens(user_inp)
         logger.debug(f"Tokens: {data}")
         org = data.get("Organization") or ""
-        symbol = self.symbol_map.get(org.upper())
+        symbol = data.get("Symbol") or ""
         if not symbol:
-            raise RuntimeError(f"Unable to find symbol for {org} to get stock information. Only 'Apple' is supported.")
+            # try to map organization with custom map
+            symbol = self.symbol_map.get(org.upper())
+        if not symbol:
+            raise RuntimeError(f"Unable to find symbol for {org} to get stock information.")
 
         period = data.get("Period") | {}
         if not period:
