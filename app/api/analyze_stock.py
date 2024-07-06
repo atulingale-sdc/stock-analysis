@@ -11,7 +11,7 @@ router = APIRouter(tags=["Stock Analysis"])
 
 @router.post("/analyze", response_model=analyze_stock.StockResponse)
 async def analyse_query(
-        req: analyze_stock.StockRequest = Depends(analyze_stock.StockRequest),
+        req: analyze_stock.StockRequest,
         current_user_id: str = Depends(get_authorised_user)
 ):
     """Give analysis of stock."""
