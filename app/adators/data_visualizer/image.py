@@ -39,8 +39,8 @@ class ImageVisualizer(Visualizer):
             volume.append(item.volume)
 
         plt.figure(figsize=(8, 5))
-        plt.plot(dates, high, marker='o', linestyle='-', color='b')
-        plt.plot(dates, low, marker='o', linestyle='-.', color='r', label='High')
+        plt.plot(dates, high, marker='o', linestyle='-', color='b', label='High')
+        plt.plot(dates, low, marker='o', linestyle='-.', color='r', label='low')
         plt.plot(dates, open_, marker='o', linestyle=':', color='g', label='Open')
         plt.plot(dates, close_, marker='o', linestyle='--', color='y', label='Close')
         # plt.plot(dates, volume, marker='o', linestyle='-', color='c', label='Volume')
