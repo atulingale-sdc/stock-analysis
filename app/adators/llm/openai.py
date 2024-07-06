@@ -20,7 +20,10 @@ class OpenAIAdaptor(LLMAdaptor):
     def _parse_json(output: str):
         output.replace('Output:', '')
         try:
-            return json.loads(output)
+            data = json.loads(output)
+            if type(data) is list:
+                return data.pop()
+            return data
         except Exception as e:
             raise e
 
