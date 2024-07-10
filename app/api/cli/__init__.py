@@ -41,5 +41,5 @@ def start():
             "app.bootstrap.server:api",
             host=conf.app_host,
             port=conf.app_port,
-            reload=conf.can_reload,
+            reload=False,
         )

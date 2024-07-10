@@ -5,7 +5,8 @@ from app.core.bootstrap import create_app
 from .dependency import configure_dependency
 
 # Configure the Dependencies for the Application
-inject.configure(configure_dependency)
+if not inject.is_configured():
+    inject.configure(configure_dependency)
 
 
 def init_app():
