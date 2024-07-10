@@ -38,6 +38,11 @@ class ImageVisualizer(Visualizer):
             close_.append(item.close)
             volume.append(item.volume)
 
+        # As the free APIs will not be providing all data we need to trim the length of labels
+        # If those are greater than the provided data
+        diff_ = len(dates) - len(high)
+        if diff_ > 0:
+            dates = dates[diff_:]
         plt.figure(figsize=(8, 5))
         plt.plot(dates, high, marker='o', linestyle='-', color='b', label='High')
         plt.plot(dates, low, marker='o', linestyle='-.', color='r', label='low')

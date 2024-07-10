@@ -24,7 +24,7 @@ class AuthenticatorService:
                 id=email,
                 email=email,
                 sub=str(email),
-            ).model_dump()
+            ).dict()
 
             access["token"] = create_access_token(data)
             access["t_type"] = "access"

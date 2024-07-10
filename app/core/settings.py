@@ -1,5 +1,4 @@
-from pydantic_settings import BaseSettings
-from pydantic_settings import SettingsConfigDict
+from pydantic import BaseSettings, SecretStr
 
 
 class CoreSettings(BaseSettings):
@@ -29,10 +28,13 @@ class CoreSettings(BaseSettings):
     force_https: bool = False
     cors_origins: set[str] = {"http://127.0.0.1:8888", "http://127.0.0.1:3000"}
 
-    openai_api_key: str | None = None
+    openai_api_key: SecretStr | None = None
     polygon_api_key: str | None = None
 
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
+    # model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
+    class Config:
+        # Load from .env file
+        env_file: str = '.env'
 
     @property
     def is_local(self) -> bool:

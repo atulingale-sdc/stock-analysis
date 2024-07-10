@@ -16,10 +16,15 @@ async def analyse_query(
 ):
     """Give analysis of stock."""
     service = StockAnalysisService()
-    summery, image = await service.analyse_user_query(user_inp=req.query)
-    return analyze_stock.StockResponse(
-        query=req.query, summery=summery, graphs=[image]
-    )
+    if await service.llm.check_current_question_is_for_stock_market(req.query):
+        summery, image = await service.analyse_user_query(user_inp=req.query)
+        return analyze_stock.StockResponse(
+            query=req.query, summery=summery, graphs=[image]
+        )
+    else:
+        return analyze_stock.StockResponse(
+            query=req.query, summery="Current question is not related to stock prices.", graphs=[]
+        )
 
 
 @router.get("/images/{image}")

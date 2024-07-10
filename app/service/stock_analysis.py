@@ -2,6 +2,7 @@ import logging
 
 import inject
 from datetime import datetime
+
 from app.adators.llm.base import LLMAdaptor
 from app.adators.data_api.base import DataAPIAdaptor
 from app.adators.data_visualizer.base import Visualizer
@@ -36,21 +37,21 @@ class StockAnalysisService:
         logger.info(f"Uer query: {user_inp}")
         data = await self.llm.extract_tokens(user_inp)
         logger.debug(f"Tokens: {data}")
-        org = data.get("Organization") or ""
-        symbol = data.get("Symbol") or ""
+        org = data.get("organisation") or ""
+        symbol = data.get("stock_symbol") or ""
         if not symbol:
             # try to map organization with custom map
             symbol = self.symbol_map.get(org.upper())
         if not symbol:
             raise RuntimeError(f"Unable to find symbol for {org} to get stock information.")
 
-        period = data.get("Period") | {}
+        period = data.get("period")
         if not period:
             raise RuntimeError(f"No period provided to analyze the stock for {org}")
 
         # Find the best suitable groping clause in order to have the less data
-        start_date = datetime.strptime(period.get("start_date"), "%Y-%m-%d")
-        end_date = datetime.strptime(period.get("end_date"), "%Y-%m-%d")
+        start_date = datetime.strptime(data.get("start_date"), "%Y-%m-%d")
+        end_date = datetime.strptime(data.get("end_date"), "%Y-%m-%d")
         diff = (end_date - start_date)
         if diff.days > 730:
             group_by = "year"
