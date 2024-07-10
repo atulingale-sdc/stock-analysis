@@ -1,12 +1,14 @@
 # Stock Analysis Commandline/API Application
 POC Application to use OpenAI APIs to extract tokens and summarise the stock data.
-Query the polygon with extracted tokens and visualise the response with graph. Exercise the 
+Query the polygon with extracted tokens and visualise the response with graph. 
+This application uses the simple chat history management to provide context to LLM and get the better answer.
 
 ## Libraries used
 - OpenAI
 - plotext
 - matplotlib
 - fastapi
+- langchain
 
 ## Platform Pre-requisites
 
