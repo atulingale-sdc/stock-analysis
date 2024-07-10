@@ -13,8 +13,8 @@ from langchain_core.runnables.history import RunnableWithMessageHistory
 from app.adators.llm.base import LLMAdaptor
 from app.settings import Settings
 
-stock_question_history = []
-chat_history = []
+stock_question_history_hash = {}
+chat_history_hash = {}
 
 
 class OpenAIAdaptor(LLMAdaptor):
@@ -27,11 +27,13 @@ class OpenAIAdaptor(LLMAdaptor):
         self.api_key = conf.openai_api_key
         # self.client = OpenAI(api_key=str(conf.openai_api_key))
         self.default_model = 'gpt-3.5-turbo-instruct'
+        self.stock_question_history = []
+        self.chat_history = []
 
     async def extract_tokens(self, text, model: str | None = None) -> None | dict:
         # Define the prompt
         template = """
-        Use the following user question history to extract the named entities:
+        Consider following user questions for referenced relevant entities:
 
         {history}
 
@@ -62,10 +64,25 @@ class OpenAIAdaptor(LLMAdaptor):
             {
                 "input": message,
                 "current_date": datetime.now().date(),
-                "history": stock_question_history
+                "history": self.stock_question_history
             }
         )
-        stock_question_history.append(message)
+
+        # Manage here chat history, it should not grow above 5 last messages
+        # And it should not contain the duplicate messages
+        hs = str(hash(message.content))
+        if not stock_question_history_hash.get(hs):
+            self.stock_question_history.append(message)
+            # mark the position of message
+            stock_question_history_hash[hs] = True
+            if len(self.stock_question_history) > 5:
+                for msg in self.stock_question_history[0:5]:
+                    # Delete the hashes
+                    hs = str(hash(msg.content))
+                    del stock_question_history_hash[hs]
+                # trim history and only last 5 messages will be looked
+                self.stock_question_history = self.stock_question_history[5:]
+
         return resp
 
     async def create_summery(self, data: str, period: str, model: str | None = None,) -> str:
@@ -125,10 +142,25 @@ class OpenAIAdaptor(LLMAdaptor):
         resp = chain.invoke(
             {
                 "input": message,
-                "history": chat_history
+                "history": self.chat_history
             }
         )
-        chat_history.append(message)
+
+        # Manage here chat history, it should not grow above 5 last messages
+        # And it should not contain the duplicate messages
+        hs = str(hash(message.content))
+        if not stock_question_history_hash.get(hs):
+            self.chat_history.append(message)
+            # mark the position of message
+            stock_question_history_hash[hs] = True
+            if len(self.chat_history) > 5:
+                for msg in self.chat_history[0:5]:
+                    # Delete the hashes
+                    hs = str(hash(msg.content))
+                    del chat_history_hash[hs]
+                # trim history and only last 5 messages will be looked
+                self.chat_history = self.chat_history[5:]
+
 
         return "true" in str(resp).lower()
 
