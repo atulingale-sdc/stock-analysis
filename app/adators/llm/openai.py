@@ -97,3 +97,38 @@ class OpenAIAdaptor(LLMAdaptor):
             {"context_data": data, "period": period},
         )
         return response
+
+    async def check_current_question_is_for_stock_market(self, text: str, model: str = None) -> bool:
+        template = """
+        You are a shock market adviser.
+        Use the following user question history for context:
+        
+        {history}
+        
+        Using user's question history context categorize following text is about stock market:
+        {input}
+        
+        Convert the output in boolean.
+        """
+
+        # model_name="gpt-3.5-turbo-instruct"
+        llm = OpenAI(openai_api_key=self.api_key, temperature=0.3)
+
+        prompt = PromptTemplate(
+            template=template,
+            input_variables=["input", "history"],
+        )
+
+        chain = prompt | llm
+
+        message = ChatMessage(content=text, role="User")
+        resp = chain.invoke(
+            {
+                "input": message,
+                "history": chat_history
+            }
+        )
+        chat_history.append(message)
+
+        return "true" in str(resp).lower()
+
