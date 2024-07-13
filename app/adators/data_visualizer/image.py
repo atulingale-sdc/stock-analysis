@@ -43,6 +43,13 @@ class ImageVisualizer(Visualizer):
         diff_ = len(dates) - len(high)
         if diff_ > 0:
             dates = dates[diff_:]
+        elif diff_ < 0:
+            high = high[:len(high)+diff_]
+            low = low[:len(low)+diff_]
+            open_ = open_[:len(open_)+diff_]
+            close_ = close_[:len(close_)+diff_]
+            volume = volume[:len(volume)+diff_]
+
         plt.figure(figsize=(8, 5))
         plt.plot(dates, high, marker='o', linestyle='-', color='b', label='High')
         plt.plot(dates, low, marker='o', linestyle='-.', color='r', label='low')
