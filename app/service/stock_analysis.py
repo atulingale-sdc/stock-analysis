@@ -36,7 +36,7 @@ class StockAnalysisService:
         """
         logger.info(f"Uer query: {user_inp}")
         data = await self.llm.extract_tokens(user_inp)
-        logger.debug(f"Tokens: {data}")
+        logger.info(f"Tokens: {data}")
         org = data.get("organisation") or ""
         symbol = data.get("stock_symbol") or ""
         if not symbol:
